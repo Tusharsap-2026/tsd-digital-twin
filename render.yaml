@@ -1,0 +1,17 @@
+# Render.com blueprint - deploys the dashboard as a Python web service.
+# Connect the GitHub repo in the Render dashboard ("New +" -> "Blueprint") and it reads this file.
+# The free plan sleeps after 15 min idle and has 512 MB RAM (enough for the simulated year);
+# use the Starter plan for an always-on instance.
+services:
+  - type: web
+    name: tsd-digital-twin
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python scripts/check_step3.py
+    startCommand: streamlit run dashboard/app.py --server.port $PORT --server.address 0.0.0.0
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: STREAMLIT_SERVER_HEADLESS
+        value: "true"
+    healthCheckPath: /_stcore/health

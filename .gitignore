@@ -1,0 +1,17 @@
+# private environment and caches
+.venv/
+__pycache__/
+*.pyc
+.streamlit/secrets.toml
+
+# large generated files - the app regenerates them on first start (deterministic, fixed seed)
+data/raw/timeseries.csv
+data/raw/timeseries_truth.csv
+data/processed/row_features.csv.gz
+
+# live plant data and historians never go to GitHub
+data/live*/
+*.sqlite
+
+# one-off outputs
+reports/*.png

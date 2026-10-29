@@ -16,6 +16,21 @@ the plant's PLC/DCS tags are connected (Step 9).
    generates the simulated data (20 s). Every later run just starts the app.
 4. The browser opens at http://localhost:8501. Close the black window to stop.
 
+## Hosting the dashboard (so others can open it in a browser)
+
+The dashboard is a long-running Python server, so it needs a host that runs Python processes -
+**not Netlify / GitHub Pages** (static hosting). Options, cheapest first:
+
+| Host | How | Notes |
+|---|---|---|
+| A PC on the plant network | `start_dashboard.bat`, then colleagues open `http://<that PC's name>:8501` | Best for plant data: stays inside the OT network |
+| Streamlit Community Cloud (free) | Push this folder to a GitHub repo, go to share.streamlit.io, main file `dashboard/app.py` | Public URL; private repos allowed; the data regenerates itself on first start |
+| Render.com | Push to GitHub, "New + -> Blueprint", it reads `render.yaml` | Free tier sleeps when idle; Starter plan for always-on |
+| Any Linux VM / Docker | `pip install -r requirements.txt && streamlit run dashboard/app.py --server.port 80 --server.address 0.0.0.0` | Put it behind the company reverse proxy with SSO |
+
+The app has **no login of its own**. With simulated data that is harmless; before plant data goes
+on it, keep it on the OT network or behind the company's single sign-on proxy.
+
 ## Folder structure
 
 ```
