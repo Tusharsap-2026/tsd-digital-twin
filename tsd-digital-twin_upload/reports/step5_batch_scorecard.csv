@@ -1,0 +1,4 @@
+model,n,esched_mape,esched_bias,esched_p90,esched_pass<=5%,efc_mape,efc_bias,efc_pass<=5%,efc_mape_no_ext,efc_mape_ext,efc2_mape,efc2_bias,efc2_pass<=5%,efc2_schedule_right_%,efc2_mape_sched_right,time_n,time_mae_min,time_bias_min,time_mape,time_pass<=10%,time_within_one_check,time_unpredicted,peak_mae,peak_bias,breach_actual,breach_hits,breach_misses,breach_false,prealarm_catches,prealarm_false,time_true_mae_min,time_true_pass<=10%
+physics,83,2.992,-2.512,5.753,73.494,6.452,-6.251,55.422,3.328,23.276,,,0.0,,,71,7.474,-4.887,22.221,23.944,61.972,8,2.324,-2.324,5,1,4,0,3,2,5.284,34.483
+linear,83,0.179,0.009,0.372,100.0,6.634,1.544,55.422,5.545,12.499,5.532,1.923,75.904,75.904,0.662,79,5.016,0.349,16.624,27.848,93.671,0,0.552,0.051,5,4,1,0,4,9,4.45,47.692
+gb,83,0.203,0.048,0.42,100.0,6.821,1.871,56.627,5.461,14.145,5.963,1.542,77.108,77.108,0.651,79,5.346,0.826,17.396,35.443,83.544,0,0.599,0.044,5,4,1,1,5,8,4.818,38.462

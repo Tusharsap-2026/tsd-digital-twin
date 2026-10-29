@@ -1,0 +1,92 @@
+table,column,unit,source,sampling,description
+timeseries,batch_id,-,MES,per batch,Unique batch identifier (MES batch number)
+timeseries,timestamp,ISO-8601,historian,10 s,"Absolute time stamp, local plant time"
+timeseries,t_s,s,derived,10 s,Seconds since batch start (first row of charge_liquids)
+timeseries,step,-,MES / PLC phase,10 s,charge_liquids | pigment_addition | high_speed_dispersion | letdown
+timeseries,product_family,-,MES recipe,per batch,water_based | solvent_based
+timeseries,recipe_id,-,MES recipe,per batch,Recipe / product code
+timeseries,batch_mass_kg,kg,PLC load cells,10 s,Mass in the vessel (rises during charging)
+timeseries,solids_pct,% w/w,MES recipe,per batch,Recipe solids content
+timeseries,pvc_pct,%,MES recipe,per batch,Pigment volume concentration
+timeseries,target_hegman,Hegman,MES recipe,per batch,Grind target for the millbase
+timeseries,hsd_rpm_setpoint,rpm,PLC / VFD,10 s,High-speed disperser speed set-point
+timeseries,hsd_rpm,rpm,PLC / VFD,10 s,High-speed disperser actual shaft speed
+timeseries,anchor_rpm,rpm,PLC / VFD,10 s,Anchor / scraper shaft speed
+timeseries,hsd_kw,kW,PLC / VFD,10 s,HSD motor electrical power
+timeseries,anchor_kw,kW,PLC / VFD,10 s,Anchor motor electrical power
+timeseries,T_product_c,degC,PLC (vessel RTD),10 s,Product temperature
+timeseries,T_jacket_in_c,degC,PLC,10 s,Chilled-water inlet temperature
+timeseries,T_jacket_out_c,degC,PLC,10 s,Chilled-water outlet temperature
+timeseries,cw_flow_m3h,m3/h,PLC,10 s,Chilled-water flow to the jacket
+timeseries,T_ambient_c,degC,PLC or weather,10 s,Hall air temperature (assumed available; daily value if not)
+timeseries,hegman,Hegman,LAB,sparse,Grind-gauge reading; NaN when not sampled
+timeseries,viscosity_ku,KU,LAB,sparse,Stormer viscosity; NaN when not sampled
+timeseries_truth,batch_id,-,simulator,per batch,Join key
+timeseries_truth,t_s,s,simulator,10 s,Join key
+timeseries_truth,T_true_c,degC,simulator,10 s,Product temperature without sensor noise or offset
+timeseries_truth,hegman_true,Hegman,simulator,10 s,Continuous model grind (what the lab samples with noise)
+timeseries_truth,hsd_kw_true,kW,simulator,10 s,HSD electrical power without sensor noise
+timeseries_truth,mu_pa_s,Pa.s,simulator,10 s,Millbase viscosity at blade shear rate
+timeseries_truth,wetted_frac,-,simulator,10 s,Fraction of pigment wetted
+timeseries_truth,phi,-,simulator,10 s,Pigment volume fraction in the vessel
+timeseries_truth,reynolds,-,simulator,10 s,Impeller Reynolds number
+timeseries_truth,power_number,-,simulator,10 s,HSD power number
+timeseries_truth,motor_limited,bool,simulator,10 s,Drive at its kW limit (speed sagging)
+timeseries_truth,U_w_m2k,W/m2K,simulator,10 s,Overall heat-transfer coefficient incl. fouling
+timeseries_truth,A_wetted_m2,m2,simulator,10 s,Jacket area in contact with product
+timeseries_truth,Q_jacket_kw,kW,simulator,10 s,Heat removed by the jacket
+timeseries_truth,Q_loss_kw,kW,simulator,10 s,Heat lost to the hall and evaporation
+timeseries_truth,volume_m3,m3,simulator,10 s,Liquid volume in the vessel
+timeseries_truth,density_kg_l,kg/L,simulator,10 s,Bulk density
+timeseries_truth,cp_kj_kgk,kJ/kgK,simulator,10 s,Bulk specific heat
+timeseries_truth,energy_cum_kwh,kWh,simulator,10 s,"Cumulative electrical energy, exact"
+batches,batch_id,-,MES,per batch,Unique batch identifier
+batches,start_time,ISO-8601,MES,per batch,Batch start
+batches,month,-,derived,per batch,Calendar month of the start (seasonality)
+batches,recipe_id,-,MES,per batch,Recipe code
+batches,recipe_name,-,MES,per batch,Recipe description
+batches,product_family,-,MES,per batch,water_based | solvent_based
+batches,batch_mass_nominal_kg,kg,MES,per batch,Recipe batch size
+batches,batch_mass_kg,kg,PLC,per batch,Actual final mass (load cells)
+batches,solids_pct,% w/w,MES,per batch,Batch solids after lot scatter
+batches,pvc_pct,%,MES,per batch,Pigment volume concentration
+batches,target_hegman,Hegman,MES,per batch,Grind target
+batches,hsd_rpm_setpoint,rpm,PLC,per batch,Operator set-point for high-speed dispersion
+batches,anchor_rpm,rpm,PLC,per batch,Anchor speed in high-speed dispersion
+batches,cw_flow_setpoint_m3h,m3/h,PLC,per batch,Chilled-water flow set-point
+batches,T_cw_in_mean_c,degC,PLC,per batch,Mean chilled-water inlet during the batch
+batches,T_ambient_c,degC,PLC,per batch,Hall temperature
+batches,T_raw_c,degC,derived,per batch,Raw-material temperature
+batches,planned_dispersion_min,min,MES,per batch,Recipe HSD time after operator adjustment
+batches,dispersion_min,min,MES,per batch,Actual HSD time incl. extensions
+batches,n_extensions,-,MES,per batch,Extensions after failed lab checks
+batches,batch_cycle_min,min,MES,per batch,Charge start to letdown end
+batches,time_to_target_hegman_lab_min,min,LAB,per batch,HSD start to first lab reading >= target (NaN = never)
+batches,hegman_lab_final,Hegman,LAB,per batch,Last lab grind reading
+batches,hegman_reached_lab,bool,LAB,per batch,Target met on a lab reading
+batches,viscosity_ku,KU,LAB,per batch,Stormer after letdown
+batches,energy_total_kwh,kWh,derived,per batch,HSD + anchor electrical energy (from measured kW)
+batches,specific_energy_kwh_per_t,kWh/t,derived,per batch,Energy per tonne of batch
+batches,peak_temp_c,degC,derived,per batch,Peak measured product temperature
+batches,breached,bool,derived,per batch,Measured temperature exceeded the family limit
+batches,hsd_load_peak_pct,%,derived,per batch,Peak HSD load
+batches,hegman_plateau,Hegman,simulator,per batch,Best achievable grind for this lot
+batches,grind_energy_factor,-,simulator,per batch,Pigment-lot grindability multiplier
+batches,viscosity_factor,-,simulator,per batch,Raw-material-lot viscosity multiplier
+batches,blade_wear,-,simulator,per batch,Blade wear state 0..1
+batches,jacket_fouling_m2k_w,m2K/W,simulator,per batch,Jacket fouling resistance
+batches,cw_flow_actual_frac,-,simulator,per batch,Actual / set-point flow (<1 = low-flow fault)
+batches,overcharge_frac,-,simulator,per batch,Actual / nominal mass (>1.06 = overcharge fault)
+batches,fault_injected,-,simulator,per batch,NONE | BLADE_WEAR | JACKET_FOULING | LOW_CW_FLOW | OVERCHARGE | MULTIPLE
+batches,time_to_target_hegman_true_min,min,simulator,per batch,HSD start to true (continuous) Hegman crossing the target
+batches,peak_temp_true_c,degC,simulator,per batch,Peak true product temperature
+batches,breached_true,bool,simulator,per batch,True temperature exceeded the limit
+batches,overcharged_volume,bool,simulator,per batch,Final volume exceeded the working volume
+batches,motor_limited_share_pct,%,simulator,per batch,Share of HSD time at the drive limit
+twin_output,T_pred_c,degC,twin,10 s,Predicted product temperature
+twin_output,hsd_kw_pred,kW,twin,10 s,Predicted HSD power
+twin_output,energy_cum_kwh,kWh,derived,10 s,"Cumulative energy, HSD + anchor"
+twin_output,specific_energy_cum_kwh_t,kWh/t,derived,10 s,Cumulative specific energy
+twin_output,hegman_pred,Hegman,twin,10 s,Predicted grind development
+twin_output,breach_eta_min,min,twin,10 s,Predicted minutes until the temperature limit (NaN = none)
+twin_output,alert_code,-,twin,10 s,NONE | TEMP_PREALARM | TEMP_LIMIT | BLADE_WEAR | JACKET_FOULING | LOW_CW_FLOW | OVERCHARGE | MOTOR_OVERLOAD

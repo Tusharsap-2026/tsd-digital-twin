@@ -1,0 +1,10 @@
+case,peak_T_c,breach,kWh,kWh_per_t,t_to_Hegman_min,Hegman_end,HSD_kw_mean,rpm_min,limited_%,overcharged
+baseline,34.15,False,31.45,10.48,32.17,6.34,39.81,912.5,0.0,False
+CW inlet 28 degC (summer),42.6,False,31.32,10.44,32.33,6.34,39.68,912.5,0.0,False
+CW flow 5 m3/h (low flow),35.43,False,31.44,10.48,32.17,6.34,39.8,912.5,0.0,False
+jacket fouled 0.001 m2K/W,36.46,False,31.43,10.48,32.17,6.34,39.78,912.5,0.0,False
+HSD 1061 rpm (25 m/s),39.0,False,41.56,13.85,19.17,6.85,55.0,1016.59,100.0,False
+blade wear 30 %,32.62,False,28.07,9.36,,5.54,35.17,912.5,0.0,False
+"batch 4,500 kg (overcharge)",31.0,False,31.57,7.02,,5.6,39.87,912.5,0.0,True
+"dispersion 60 min, summer",44.82,False,45.03,15.01,32.33,6.77,39.64,912.5,0.0,False
+"summer + 1000 rpm + 7 m3/h, 50 min",48.88,True,48.23,16.08,21.0,6.91,51.74,1000.0,0.0,False

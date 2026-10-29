@@ -1,0 +1,13 @@
+recipe_id,name,family,batch_mass_kg,solids_pct,pvc_pct,target_hegman,hegman_plateau,dispersion_rpm,dispersion_min,pigment_min,viscosity_ku,weight
+WB-MATT-INT,Interior matt emulsion,water_based,3000,58,55,6.0,6.9,912,38,20,105,0.3
+WB-SHEEN,Interior sheen emulsion,water_based,2600,50,28,6.5,7.2,950,38,15,95,0.16
+WB-EXT-SMOOTH,Exterior smooth emulsion,water_based,3200,56,42,6.0,7.0,912,40,18,110,0.16
+WB-PRIMER,Water-based primer sealer,water_based,3600,60,65,5.0,6.3,920,38,22,100,0.11
+WB-PUTTY,High-PVC wall putty,water_based,4400,68,75,4.5,5.8,900,40,28,120,0.07
+WB-ECONOMY,Economy matt,water_based,3800,62,70,4.5,5.9,880,38,24,115,0.13
+WB-DEEPBASE,Deep tint base,water_based,2400,46,20,7.0,7.5,1000,42,12,90,0.07
+SB-GLOSS-WHITE,Alkyd gloss enamel white,solvent_based,3000,65,18,7.0,7.7,912,40,18,85,0.33
+SB-GLOSS-COL,Alkyd gloss enamel colour,solvent_based,2400,60,15,7.0,7.6,950,45,15,80,0.17
+SB-UNDERCOAT,Alkyd undercoat,solvent_based,3200,68,32,6.0,7.0,880,40,20,90,0.22
+SB-REDOXIDE,Red oxide metal primer,solvent_based,3400,70,35,5.5,6.6,920,38,22,92,0.17
+SB-SATIN,Alkyd satin enamel,solvent_based,2000,58,22,6.5,7.4,1000,40,12,78,0.11

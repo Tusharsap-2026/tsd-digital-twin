@@ -1,0 +1,25 @@
+canonical_column,source,tag_address,mqtt_topic,unit_plant,unit_twin,scale,offset,deadband,max_age_s,required,description
+plc_heartbeat,PLC,ns=2;s=TSD01.PLC.Heartbeat,plant/tsd01/plc/heartbeat,s,s,1,0,,30,yes,"PLC seconds counter; the ONLY tag with a staleness limit - if it stops, every PLC value is treated as bad (OPC UA/MQTT report changes only, so unchanged values are latched, not stale)"
+batch_id,MES,ns=2;s=TSD01.MES.BatchID,plant/tsd01/mes/batch_id,-,-,1,0,,0,yes,Active batch number from the MES phase logic; empty string = no batch running
+step,MES,ns=2;s=TSD01.MES.PhaseName,plant/tsd01/mes/phase,-,-,1,0,,0,yes,"MES phase name; mapped to charge_liquids | pigment_addition | high_speed_dispersion | letdown by step_map.csv"
+recipe_id,MES,ns=2;s=TSD01.MES.RecipeID,plant/tsd01/mes/recipe_id,-,-,1,0,,0,yes,Recipe / material code of the running batch
+product_family,MES,ns=2;s=TSD01.MES.ProductFamily,plant/tsd01/mes/product_family,-,-,1,0,,0,yes,water_based | solvent_based (derived from the recipe master if not a tag)
+batch_mass_nominal_kg,MES,ns=2;s=TSD01.MES.BatchSizeKg,plant/tsd01/mes/batch_size_kg,kg,kg,1,0,,0,yes,Recipe batch size (overcharge reference)
+solids_pct,MES,ns=2;s=TSD01.MES.SolidsPct,plant/tsd01/mes/solids_pct,%,% w/w,1,0,,0,yes,Recipe solids
+pvc_pct,MES,ns=2;s=TSD01.MES.PVC,plant/tsd01/mes/pvc_pct,%,%,1,0,,0,yes,Recipe pigment volume concentration
+target_hegman,MES,ns=2;s=TSD01.MES.TargetHegman,plant/tsd01/mes/target_hegman,Hegman,Hegman,1,0,,0,yes,Grind target
+planned_dispersion_min,MES,ns=2;s=TSD01.MES.PlannedHSDMin,plant/tsd01/mes/planned_hsd_min,min,min,1,0,,0,no,Recipe high-speed time (used by the energy forecast)
+batch_mass_kg,PLC,ns=2;s=TSD01.WIT1201.PV,plant/tsd01/plc/wit1201,kg,kg,1,0,2,0,yes,Vessel load cells
+hsd_rpm_setpoint,PLC,ns=2;s=TSD01.SIC1201.SP,plant/tsd01/plc/sic1201_sp,rpm,rpm,1,0,1,0,yes,HSD speed set-point (VFD)
+hsd_rpm,PLC,ns=2;s=TSD01.SI1201.PV,plant/tsd01/plc/si1201,rpm,rpm,1,0,1,0,yes,HSD actual speed (VFD feedback)
+anchor_rpm,PLC,ns=2;s=TSD01.SI1202.PV,plant/tsd01/plc/si1202,rpm,rpm,1,0,0.5,0,yes,Anchor actual speed
+hsd_kw,PLC,ns=2;s=TSD01.JI1201.PV,plant/tsd01/plc/ji1201,kW,kW,1,0,0.1,0,yes,HSD motor electrical power from the VFD (NOT current x voltage estimate - check the VFD parameter)
+anchor_kw,PLC,ns=2;s=TSD01.JI1202.PV,plant/tsd01/plc/ji1202,kW,kW,1,0,0.05,0,yes,Anchor motor electrical power (0.05 kW resolution needed: viscosity-lot indicator)
+T_product_c,PLC,ns=2;s=TSD01.TI1201.PV,plant/tsd01/plc/ti1201,degC,degC,1,0,0.05,0,yes,Product temperature (Pt100 in thermowell; the twin's primary tag)
+T_jacket_in_c,PLC,ns=2;s=TSD01.TI1202.PV,plant/tsd01/plc/ti1202,degC,degC,1,0,0.05,0,yes,Chilled-water inlet (matched-pair Pt100 with TI1203 - fouling rule lives on their difference)
+T_jacket_out_c,PLC,ns=2;s=TSD01.TI1203.PV,plant/tsd01/plc/ti1203,degC,degC,1,0,0.05,0,yes,Chilled-water outlet (matched pair with TI1202)
+cw_flow_m3h,PLC,ns=2;s=TSD01.FI1201.PV,plant/tsd01/plc/fi1201,m3/h,m3/h,1,0,0.1,0,yes,Chilled-water flow (electromagnetic)
+cw_flow_setpoint_m3h,PLC,ns=2;s=TSD01.FIC1201.SP,plant/tsd01/plc/fic1201_sp,m3/h,m3/h,1,0,0.1,0,yes,Chilled-water flow set-point (low-flow reference)
+T_ambient_c,PLC,ns=2;s=TSD01.TI1290.PV,plant/tsd01/plc/ti1290,degC,degC,1,0,0.2,0,no,Hall air temperature near the vessel (daily weather value if absent)
+hegman,LAB,ns=2;s=TSD01.LIMS.Hegman,plant/tsd01/lims/hegman,Hegman,Hegman,1,0,,0,no,Grind-gauge reading with its sampling time stamp (LIMS or operator entry)
+viscosity_ku,LAB,ns=2;s=TSD01.LIMS.ViscosityKU,plant/tsd01/lims/viscosity_ku,KU,KU,1,0,,0,no,Stormer viscosity after letdown

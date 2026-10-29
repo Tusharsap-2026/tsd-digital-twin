@@ -1,0 +1,12 @@
+mes_phase_name,canonical_step,note
+CHARGE,charge_liquids,liquids charged from the vehicle / water tanks
+LIQUID_CHARGE,charge_liquids,alias
+PIGMENT,pigment_addition,pigment and extender dosing at low speed
+POWDER_ADD,pigment_addition,alias
+DISPERSE,high_speed_dispersion,high-speed dispersion
+HSD,high_speed_dispersion,alias
+GRIND,high_speed_dispersion,alias
+LETDOWN,letdown,binder and remaining liquids
+THIN_DOWN,letdown,alias
+IDLE,,no batch running - rows are discarded
+CIP,,cleaning - rows are discarded

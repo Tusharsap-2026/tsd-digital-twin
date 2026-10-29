@@ -1,0 +1,79 @@
+parameter,value,unit,basis,note
+equipment.vessel.working_volume_l,3000,L,given,Maximum liquid volume at full charge
+equipment.vessel.nominal_volume_l,3600,L,assumption,Working volume + ~20 % freeboard for vortex and foam; take from vendor GA drawing
+equipment.vessel.inner_diameter_m,1.6,m,assumption,Typical for a 3 m3 dispersion vessel (H/D about 1.0-1.2); replace with GA drawing
+equipment.vessel.straight_side_height_m,1.7,m,assumption,Cylinder ~3.4 m3 + dished bottom -> nominal volume
+equipment.vessel.liquid_height_at_full_charge_m,1.49,m,assumption,"3000 L / (pi/4 x 1.6^2) = 1.49 m, dish ignored"
+equipment.vessel.jacket_height_m,1.4,m,assumption,Jacket on bottom dish + lower straight side; wetted jacket area shrinks at small batches (Step 2)
+equipment.vessel.bottom_dish_area_m2,2.3,m2,assumption,Torispherical bottom ~ 1.15 x (pi/4) D^2
+equipment.vessel.wall_thickness_mm,8,mm,assumption,SS 316L shell; part of the wall heat-transfer resistance (Step 2)
+equipment.hsd.blade_diameter_m,0.45,m,given,
+equipment.hsd.speed_min_rpm,0,rpm,given,
+equipment.hsd.speed_max_rpm,1450,rpm,given,VFD maximum. At 1450 rpm the tip speed is 34.2 m/s - ABOVE the 18-25 m/s dispersion target
+equipment.hsd.motor_rated_kw,55,kW,given,"Motor shaft rating, VFD-driven"
+equipment.hsd.tip_speed_target_ms,"[18, 25]",m/s,given,Equivalent to 764-1061 rpm with the 0.45 m blade
+equipment.hsd.motor_efficiency,0.93,-,assumption,IE3 55 kW 4-pole motor at 75-100 % load
+equipment.hsd.drive_efficiency,0.96,-,assumption,VFD (0.97) x belt/coupling (0.99): electrical kW -> shaft kW
+equipment.hsd.max_continuous_load_pct,100,%,assumption,VFD current limit; sustained load above this trips the drive
+equipment.anchor.speed_min_rpm,0,rpm,given,
+equipment.anchor.speed_max_rpm,40,rpm,given,
+equipment.anchor.motor_rated_kw,11,kW,given,
+equipment.anchor.motor_efficiency,0.9,-,assumption,
+equipment.anchor.drive_efficiency,0.94,-,assumption,VFD x helical gearbox (~0.97)
+equipment.cooling_jacket.medium,chilled water,-,given,
+equipment.cooling_jacket.inlet_temp_range_c,"[12, 28]",degC,given,Varies with season and chiller load
+equipment.cooling_jacket.flow_range_m3h,"[5, 15]",m3/h,given,
+equipment.cooling_jacket.water_density_kg_m3,998,kg/m3,physical,
+equipment.cooling_jacket.water_cp_kj_kgk,4.18,kJ/(kg.K),physical,
+products.water_based.label,Water-based emulsion paints,-,given,
+products.water_based.temp_limit_c,45,degC,given,"Product temperature limit (emulsion stability, thickener, biocide)"
+products.water_based.temp_alarm_margin_c,3,degC,assumption,Pre-alarm at limit minus margin (42 degC)
+products.water_based.density_range_kg_l,"[1.2, 1.55]",kg/L,assumption,Low-PVC sheen ~1.2; high-PVC matt / primer ~1.5
+products.water_based.cp_kj_kgk,3.3,kJ/(kg.K),assumption,"Mass-weighted: water 4.18, extenders ~0.85, TiO2 0.70, binder ~1.5; range 3.0-3.6 depending on PVC"
+products.water_based.solids_range_pct,"[45, 65]",% w/w,assumption,
+products.water_based.pvc_range_pct,"[15, 75]",%,assumption,"Pigment volume concentration: sheen 15-30, matt 40-60, primer/putty up to 75"
+products.water_based.target_hegman_range,"[5, 7]",Hegman,assumption,Emulsion millbase typically 5-6 (matt) up to 7 (sheen)
+products.water_based.target_viscosity_ku_range,"[90, 120]",KU,assumption,Stormer at 25 degC after letdown
+products.solvent_based.label,Solvent-based enamels (alkyd),-,given,
+products.solvent_based.temp_limit_c,55,degC,given,Solvent evaporation / flash-point margin and resin stability
+products.solvent_based.temp_alarm_margin_c,3,degC,assumption,
+products.solvent_based.density_range_kg_l,"[1.0, 1.3]",kg/L,assumption,
+products.solvent_based.cp_kj_kgk,1.9,kJ/(kg.K),assumption,"Alkyd/solvent 1.8-2.0 (xylene 1.7, mineral spirit 1.9), TiO2 0.70"
+products.solvent_based.solids_range_pct,"[50, 70]",% w/w,assumption,
+products.solvent_based.pvc_range_pct,"[10, 35]",%,assumption,
+products.solvent_based.target_hegman_range,"[6.5, 7.5]",Hegman,assumption,Gloss enamel millbase usually >= 7 before letdown
+products.solvent_based.target_viscosity_ku_range,"[70, 95]",KU,assumption,
+batch.mass_range_t,"[1.5, 4.5]",t,given,"4.5 t fits in 3000 L only when density >= 1.50 kg/L, i.e. dense water-based products only"
+batch.initial_product_temp_range_c,"[22, 34]",degC,assumption,Raw-material store temperature; higher in the hot season
+batch.ambient_temp_range_c,"[18, 36]",degC,assumption,Plant hall air; drives surface losses and chilled-water inlet temperature
+process_steps.charge_liquids.order,1,-,given,
+process_steps.charge_liquids.duration_range_min,"[5, 12]",min,assumption,
+process_steps.charge_liquids.hsd_rpm_range,"[150, 350]",rpm,assumption,"Low speed, blade just below the surface, no splashing"
+process_steps.charge_liquids.anchor_rpm_range,"[15, 25]",rpm,assumption,
+process_steps.pigment_addition.order,2,-,given,
+process_steps.pigment_addition.duration_range_min,"[10, 30]",min,assumption,Scales with pigment/extender mass and dosing rate
+process_steps.pigment_addition.hsd_rpm_range,"[350, 600]",rpm,assumption,Enough vortex to pull powder in; tip speed 8-14 m/s
+process_steps.pigment_addition.anchor_rpm_range,"[25, 35]",rpm,assumption,
+process_steps.high_speed_dispersion.order,3,-,given,
+process_steps.high_speed_dispersion.duration_range_min,"[20, 60]",min,assumption,Recipe setting; the twin predicts when Hegman is actually reached
+process_steps.high_speed_dispersion.hsd_rpm_range,"[764, 1061]",rpm,given,Derived directly from the 18-25 m/s tip-speed target
+process_steps.high_speed_dispersion.anchor_rpm_range,"[30, 40]",rpm,assumption,
+process_steps.letdown.order,4,-,given,
+process_steps.letdown.duration_range_min,"[10, 25]",min,assumption,
+process_steps.letdown.hsd_rpm_range,"[300, 550]",rpm,assumption,
+process_steps.letdown.anchor_rpm_range,"[15, 25]",rpm,assumption,
+data.sample_period_s,10,s,given,Simulation resolution now; historian sampling target later (Step 9)
+data.lab_hegman_first_check_min,15,min,assumption,First grind-gauge check after this many minutes of high-speed dispersion
+data.lab_hegman_interval_min,10,min,assumption,Grind-gauge checks repeat at this interval until target reached
+data.lab_hegman_resolution,0.5,Hegman,assumption,Gauge is read to the nearest 0.5 - this sets the floor on any Hegman prediction accuracy
+data.lab_viscosity_per_batch,1,samples/batch,assumption,One Stormer reading after letdown
+kpi_targets.temp_mae_c,1.5,degC,given,Mean absolute error of predicted product temperature over the batch
+kpi_targets.temp_max_abs_error_c,3.0,degC,assumption,Worst-point error; an MAE target alone can hide a badly predicted peak
+kpi_targets.energy_error_pct,5,%,given,|predicted - actual| / actual for kWh per batch (and therefore kWh/t)
+kpi_targets.dispersion_time_error_pct,10,%,given,Time from HSD start to target Hegman
+kpi_targets.breach_lead_time_min,5,min,assumption,'Several minutes ahead' taken as: warn at least 5 min before the limit is crossed
+kpi_targets.max_false_alarms_per_100_batches,5,alarms/100 batches,assumption,
+kpi_targets.min_fault_detection_rate_pct,80,%,assumption,"Per fault type (blade wear, fouled jacket, low flow, overcharge) - Step 8"
+kpi_targets.pass_rate_pct,90,%,assumption,"Share of TEST batches that must meet each target; always report median and P90, not only the mean"
+simulation.n_batches,300,batches,given,Minimum; Step 3 generates at least this many
+simulation.random_seed,42,-,assumption,Fixed so every run reproduces the same dataset

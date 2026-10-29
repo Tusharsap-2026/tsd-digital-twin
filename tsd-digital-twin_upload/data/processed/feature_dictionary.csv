@@ -1,0 +1,118 @@
+feature,group
+batch_id,keys
+timestamp,keys
+t_s,keys
+step,keys
+recipe_id,keys
+product_family,keys
+start_time,keys
+month,keys
+t_min,time
+step_idx,time
+t_in_step_min,time
+is_charge_liquids,time
+is_pigment_addition,time
+is_high_speed_dispersion,time
+is_letdown,time
+family_wb,"recipe (MES, pre-batch)"
+solids_pct,"recipe (MES, pre-batch)"
+pvc_pct,"recipe (MES, pre-batch)"
+target_hegman,"recipe (MES, pre-batch)"
+batch_mass_final_kg,"recipe (MES, pre-batch)"
+batch_mass_kg,"recipe (MES, pre-batch)"
+batch_mass_actual_kg,"recipe (MES, pre-batch)"
+millbase_mass_kg,"recipe (MES, pre-batch)"
+phi_millbase,"recipe (MES, pre-batch)"
+cp_final_kj_kgk,"recipe (MES, pre-batch)"
+density_final_kg_l,"recipe (MES, pre-batch)"
+planned_dispersion_min,"recipe (MES, pre-batch)"
+hsd_rpm_setpoint,actuators / utilities (measured)
+hsd_rpm,actuators / utilities (measured)
+tip_speed_ms,actuators / utilities (measured)
+tip_speed_setpoint_ms,actuators / utilities (measured)
+anchor_rpm,actuators / utilities (measured)
+anchor_rpm_hsd,actuators / utilities (measured)
+hsd_kw,actuators / utilities (measured)
+anchor_kw,actuators / utilities (measured)
+T_jacket_in_c,actuators / utilities (measured)
+T_jacket_out_c,actuators / utilities (measured)
+cw_flow_m3h,actuators / utilities (measured)
+cw_flow_m3h_at_t0,actuators / utilities (measured)
+T_cw_in_at_t0_c,actuators / utilities (measured)
+T_ambient_c,actuators / utilities (measured)
+mass_frac_of_final,actuators / utilities (measured)
+cooling_duty_meas_kw,actuators / utilities (measured)
+T_start_c,actuators / utilities (measured)
+T_at_hsd_start_c,actuators / utilities (measured)
+energy_cum_kwh,energy (measured)
+specific_energy_cum_kwh_t,energy (measured)
+hsd_kw_per_t_millbase,energy (measured)
+energy_at_hsd_start_kwh,energy (measured)
+T_phys_open,physics baseline
+T_phys_replay,physics baseline
+hsd_kw_phys,physics baseline
+hegman_phys,physics baseline
+mu_phys,physics baseline
+U_phys,physics baseline
+A_phys_m2,physics baseline
+Q_jacket_phys_kw,physics baseline
+energy_phys_cum_kwh,physics baseline
+submergence_phys,physics baseline
+dT_phys_to_jacket_c,physics baseline
+dTdt_phys_c_per_min,physics baseline
+hsd_kw_resid_phys,physics baseline
+anchor_kw_phys,physics baseline
+anchor_kw_resid_phys,physics baseline
+mu_phys_open,physics baseline
+U_phys_open,physics baseline
+Q_jacket_phys_open_kw,physics baseline
+dT_phys_open_to_jacket_c,physics baseline
+dTdt_phys_open_c_per_min,physics baseline
+phys_energy_total_kwh,physics baseline
+phys_specific_energy_kwh_per_t,physics baseline
+phys_time_to_target_min,physics baseline
+phys_hegman_end,physics baseline
+phys_peak_temp_c,physics baseline
+phys_breached,physics baseline
+phys_hsd_load_peak_pct,physics baseline
+phys_energy_actual_sched_kwh,physics baseline
+phys_hsd_kw_mean_dispersion,physics baseline
+phys_anchor_kw_mean_dispersion,physics baseline
+charge_min,pre-HSD evidence (measured by t0)
+pigment_min,pre-HSD evidence (measured by t0)
+pigment_kw_mean,pre-HSD evidence (measured by t0)
+pigment_rpm_mean,pre-HSD evidence (measured by t0)
+pigment_kw_per_t_millbase,pre-HSD evidence (measured by t0)
+pigment_kw_resid_phys,pre-HSD evidence (measured by t0)
+pigment_kw_resid_phys_pct,pre-HSD evidence (measured by t0)
+pigment_anchor_kw_resid_pct,pre-HSD evidence (measured by t0)
+pigment_T_resid_replay_c,pre-HSD evidence (measured by t0)
+hsd5_kw_mean,early-HSD evidence (t0 + 5 min)
+hsd5_kw_resid_phys,early-HSD evidence (t0 + 5 min)
+hsd5_kw_resid_phys_pct,early-HSD evidence (t0 + 5 min)
+hsd5_dTdt_meas_c_per_min,early-HSD evidence (t0 + 5 min)
+hsd5_dTdt_phys_c_per_min,early-HSD evidence (t0 + 5 min)
+hsd5_T_resid_replay_c,early-HSD evidence (t0 + 5 min)
+hsd5_rpm_sag,early-HSD evidence (t0 + 5 min)
+hsd5_cooling_duty_kw,early-HSD evidence (t0 + 5 min)
+lag_T_meas_c,online lag (horizon earlier)
+lag_resid_replay_c,online lag (horizon earlier)
+lag_resid_open_c,online lag (horizon earlier)
+lag_dTdt_meas_c_per_min,online lag (horizon earlier)
+lag_T_phys_replay_c,online lag (horizon earlier)
+ctx_batches_since_blade_change,context (maintenance records; off by default)
+ctx_batches_since_jacket_clean,context (maintenance records; off by default)
+T_product_c,targets
+resid_open_c,targets
+resid_replay_c,targets
+hegman_lab,targets
+y_energy_total_kwh,targets
+y_hsd_energy_kwh,targets
+y_specific_energy_kwh_per_t,targets
+y_dispersion_min,targets
+y_time_to_target_lab_min,targets
+y_hegman_reached,targets
+y_hegman_lab_final,targets
+y_peak_temp_c,targets
+y_breached,targets
+y_n_extensions,targets

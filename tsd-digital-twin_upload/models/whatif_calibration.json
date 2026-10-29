@@ -1,0 +1,6 @@
+{
+  "energy_factor": 1.0270670147954744,
+  "grind_time_factor": 0.9572171580565155,
+  "n_batches": 247,
+  "note": "median measured/physics ratios on the train batches of the SIMULATED dataset"
+}

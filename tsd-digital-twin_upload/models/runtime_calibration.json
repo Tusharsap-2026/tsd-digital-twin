@@ -1,0 +1,7 @@
+{
+  "kw_resid_pct": 2.9922137770969464,
+  "T_resid_replay_c": 1.4527473098116228,
+  "u_ratio": 0.8147115192376604,
+  "n_batches": 247,
+  "note": "medians over the train batches of the SIMULATED dataset"
+}

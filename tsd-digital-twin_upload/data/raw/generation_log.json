@@ -1,0 +1,8 @@
+{
+  "seed": 42,
+  "n_batches": 330,
+  "rows": 174043,
+  "config_version": "0.3 (Step 7 - runtime alerts and dashboard)",
+  "generated_at": "2026-10-30T00:41:07",
+  "note": "SIMULATED data: Step 2 physics with hidden plant-vs-model offsets, noise and faults. Not plant data."
+}

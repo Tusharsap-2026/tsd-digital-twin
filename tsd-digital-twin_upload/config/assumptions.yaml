@@ -1,0 +1,1111 @@
+# ============================================================================
+#  TSD DIGITAL TWIN - THE ONE ASSUMPTIONS FILE          (config/assumptions.yaml)
+# ----------------------------------------------------------------------------
+#  Rule: every number the twin uses lives here. Each parameter is written as
+#     value : the number (or [min, max] range)
+#     unit  : SI unit, "-" if dimensionless
+#     basis : given      = supplied in the factory head's equipment basis
+#             assumption = assumed by the twin team -> CONFIRM against vendor
+#                          data sheets / GA drawings / first real batches
+#             physical   = standard physical property or constant
+#     note  : origin or derivation
+#  Later steps ADD sections to this file (physics, simulation detail, models).
+#  Nothing numeric is hard-coded in the Python code.
+# ============================================================================
+
+meta:
+  project: "Twin-shaft disperser (TSD) digital twin - prototype"
+  version: "0.3 (Step 7 - runtime alerts and dashboard)"
+  unit_system: "SI: kg, m, s, degC, kW, kWh. Time stamps ISO-8601, local plant time."
+  data_status: "SIMULATED until Step 9 cut-over. No result from this twin is real plant performance."
+
+# ---------------------------------------------------------------- EQUIPMENT --
+equipment:
+  vessel:
+    working_volume_l:
+      value: 3000
+      unit: L
+      basis: given
+      note: "Maximum liquid volume at full charge"
+    nominal_volume_l:
+      value: 3600
+      unit: L
+      basis: assumption
+      note: "Working volume + ~20 % freeboard for vortex and foam; take from vendor GA drawing"
+    inner_diameter_m:
+      value: 1.60
+      unit: m
+      basis: assumption
+      note: "Typical for a 3 m3 dispersion vessel (H/D about 1.0-1.2); replace with GA drawing"
+    straight_side_height_m:
+      value: 1.70
+      unit: m
+      basis: assumption
+      note: "Cylinder ~3.4 m3 + dished bottom -> nominal volume"
+    liquid_height_at_full_charge_m:
+      value: 1.49
+      unit: m
+      basis: assumption
+      note: "3000 L / (pi/4 x 1.6^2) = 1.49 m, dish ignored"
+    jacket_height_m:
+      value: 1.40
+      unit: m
+      basis: assumption
+      note: "Jacket on bottom dish + lower straight side; wetted jacket area shrinks at small batches (Step 2)"
+    bottom_dish_area_m2:
+      value: 2.3
+      unit: m2
+      basis: assumption
+      note: "Torispherical bottom ~ 1.15 x (pi/4) D^2"
+    wall_thickness_mm:
+      value: 8
+      unit: mm
+      basis: assumption
+      note: "SS 316L shell; part of the wall heat-transfer resistance (Step 2)"
+
+  hsd:                       # high-speed disperser, sawtooth (Cowles-type) blade
+    blade_diameter_m:
+      value: 0.45
+      unit: m
+      basis: given
+    speed_min_rpm:
+      value: 0
+      unit: rpm
+      basis: given
+    speed_max_rpm:
+      value: 1450
+      unit: rpm
+      basis: given
+      note: "VFD maximum. At 1450 rpm the tip speed is 34.2 m/s - ABOVE the 18-25 m/s dispersion target"
+    motor_rated_kw:
+      value: 55
+      unit: kW
+      basis: given
+      note: "Motor shaft rating, VFD-driven"
+    tip_speed_target_ms:
+      value: [18, 25]
+      unit: m/s
+      basis: given
+      note: "Equivalent to 764-1061 rpm with the 0.45 m blade"
+    motor_efficiency:
+      value: 0.93
+      unit: "-"
+      basis: assumption
+      note: "IE3 55 kW 4-pole motor at 75-100 % load"
+    drive_efficiency:
+      value: 0.96
+      unit: "-"
+      basis: assumption
+      note: "VFD (0.97) x belt/coupling (0.99): electrical kW -> shaft kW"
+    max_continuous_load_pct:
+      value: 100
+      unit: "%"
+      basis: assumption
+      note: "VFD current limit; sustained load above this trips the drive"
+
+  anchor:                    # anchor / wall scraper
+    speed_min_rpm:
+      value: 0
+      unit: rpm
+      basis: given
+    speed_max_rpm:
+      value: 40
+      unit: rpm
+      basis: given
+    motor_rated_kw:
+      value: 11
+      unit: kW
+      basis: given
+    motor_efficiency:
+      value: 0.90
+      unit: "-"
+      basis: assumption
+    drive_efficiency:
+      value: 0.94
+      unit: "-"
+      basis: assumption
+      note: "VFD x helical gearbox (~0.97)"
+
+  cooling_jacket:
+    medium:
+      value: "chilled water"
+      unit: "-"
+      basis: given
+    inlet_temp_range_c:
+      value: [12, 28]
+      unit: degC
+      basis: given
+      note: "Varies with season and chiller load"
+    flow_range_m3h:
+      value: [5, 15]
+      unit: m3/h
+      basis: given
+    water_density_kg_m3:
+      value: 998
+      unit: kg/m3
+      basis: physical
+    water_cp_kj_kgk:
+      value: 4.18
+      unit: kJ/(kg.K)
+      basis: physical
+
+# ----------------------------------------------------------------- PRODUCTS --
+products:
+  water_based:
+    label:
+      value: "Water-based emulsion paints"
+      unit: "-"
+      basis: given
+    temp_limit_c:
+      value: 45
+      unit: degC
+      basis: given
+      note: "Product temperature limit (emulsion stability, thickener, biocide)"
+    temp_alarm_margin_c:
+      value: 3
+      unit: degC
+      basis: assumption
+      note: "Pre-alarm at limit minus margin (42 degC)"
+    density_range_kg_l:
+      value: [1.20, 1.55]
+      unit: kg/L
+      basis: assumption
+      note: "Low-PVC sheen ~1.2; high-PVC matt / primer ~1.5"
+    # cp is no longer a fixed number: Step 2 computes it from the batch composition
+    # (physics.materials.*). The Step 1 placeholder of 3.3 kJ/(kg.K) was too high.
+    solids_range_pct:
+      value: [45, 65]
+      unit: "% w/w"
+      basis: assumption
+    pvc_range_pct:
+      value: [15, 75]
+      unit: "%"
+      basis: assumption
+      note: "Pigment volume concentration: sheen 15-30, matt 40-60, primer/putty up to 75"
+    target_hegman_range:
+      value: [5, 7]
+      unit: Hegman
+      basis: assumption
+      note: "Emulsion millbase typically 5-6 (matt) up to 7 (sheen)"
+    target_viscosity_ku_range:
+      value: [90, 120]
+      unit: KU
+      basis: assumption
+      note: "Stormer at 25 degC after letdown"
+
+  solvent_based:
+    label:
+      value: "Solvent-based enamels (alkyd)"
+      unit: "-"
+      basis: given
+    temp_limit_c:
+      value: 55
+      unit: degC
+      basis: given
+      note: "Solvent evaporation / flash-point margin and resin stability"
+    temp_alarm_margin_c:
+      value: 3
+      unit: degC
+      basis: assumption
+    density_range_kg_l:
+      value: [1.00, 1.30]
+      unit: kg/L
+      basis: assumption
+    # cp computed from composition in Step 2 (physics.materials.solvent_based); the
+    # Step 1 placeholder of 1.9 kJ/(kg.K) was too high for a 65 % solids enamel.
+    solids_range_pct:
+      value: [50, 70]
+      unit: "% w/w"
+      basis: assumption
+    pvc_range_pct:
+      value: [10, 35]
+      unit: "%"
+      basis: assumption
+    target_hegman_range:
+      value: [6.5, 7.5]
+      unit: Hegman
+      basis: assumption
+      note: "Gloss enamel millbase usually >= 7 before letdown"
+    target_viscosity_ku_range:
+      value: [70, 95]
+      unit: KU
+      basis: assumption
+
+# -------------------------------------------------------------------- BATCH --
+batch:
+  mass_range_t:
+    value: [1.5, 4.5]
+    unit: t
+    basis: given
+    note: "4.5 t fits in 3000 L only when density >= 1.50 kg/L, i.e. dense water-based products only"
+  initial_product_temp_range_c:
+    value: [22, 34]
+    unit: degC
+    basis: assumption
+    note: "Raw-material store temperature; higher in the hot season"
+  ambient_temp_range_c:
+    value: [18, 36]
+    unit: degC
+    basis: assumption
+    note: "Plant hall air; drives surface losses and chilled-water inlet temperature"
+
+# ------------------------------------------------------------ STEP SEQUENCE --
+# Canonical phase names used by the simulator, the KPI code and later the MES
+# phase mapping. Durations and speeds are TYPICAL values for simulation; the
+# MES recipe overrides them batch by batch once live.
+process_steps:
+  charge_liquids:
+    order:
+      value: 1
+      unit: "-"
+      basis: given
+    duration_range_min:
+      value: [5, 12]
+      unit: min
+      basis: assumption
+    hsd_rpm_range:
+      value: [150, 350]
+      unit: rpm
+      basis: assumption
+      note: "Low speed, blade just below the surface, no splashing"
+    anchor_rpm_range:
+      value: [15, 25]
+      unit: rpm
+      basis: assumption
+  pigment_addition:
+    order:
+      value: 2
+      unit: "-"
+      basis: given
+    duration_range_min:
+      value: [10, 30]
+      unit: min
+      basis: assumption
+      note: "Scales with pigment/extender mass and dosing rate"
+    hsd_rpm_range:
+      value: [350, 600]
+      unit: rpm
+      basis: assumption
+      note: "Enough vortex to pull powder in; tip speed 8-14 m/s"
+    anchor_rpm_range:
+      value: [25, 35]
+      unit: rpm
+      basis: assumption
+  high_speed_dispersion:
+    order:
+      value: 3
+      unit: "-"
+      basis: given
+    duration_range_min:
+      value: [20, 60]
+      unit: min
+      basis: assumption
+      note: "Recipe setting; the twin predicts when Hegman is actually reached"
+    hsd_rpm_range:
+      value: [764, 1061]
+      unit: rpm
+      basis: given
+      note: "Derived directly from the 18-25 m/s tip-speed target"
+    anchor_rpm_range:
+      value: [30, 40]
+      unit: rpm
+      basis: assumption
+  letdown:
+    order:
+      value: 4
+      unit: "-"
+      basis: given
+    duration_range_min:
+      value: [10, 25]
+      unit: min
+      basis: assumption
+    hsd_rpm_range:
+      value: [300, 550]
+      unit: rpm
+      basis: assumption
+    anchor_rpm_range:
+      value: [15, 25]
+      unit: rpm
+      basis: assumption
+
+# --------------------------------------------------------------------- DATA --
+data:
+  sample_period_s:
+    value: 10
+    unit: s
+    basis: given
+    note: "Simulation resolution now; historian sampling target later (Step 9)"
+  lab_hegman_first_check_min:
+    value: 15
+    unit: min
+    basis: assumption
+    note: "First grind-gauge check after this many minutes of high-speed dispersion"
+  lab_hegman_interval_min:
+    value: 10
+    unit: min
+    basis: assumption
+    note: "Grind-gauge checks repeat at this interval until target reached"
+  lab_hegman_resolution:
+    value: 0.5
+    unit: Hegman
+    basis: assumption
+    note: "Gauge is read to the nearest 0.5 - this sets the floor on any Hegman prediction accuracy"
+  lab_viscosity_per_batch:
+    value: 1
+    unit: samples/batch
+    basis: assumption
+    note: "One Stormer reading after letdown"
+
+# -------------------------------------------------------------- KPI TARGETS --
+kpi_targets:
+  temp_mae_c:
+    value: 1.5
+    unit: degC
+    basis: given
+    note: "Mean absolute error of predicted product temperature over the batch"
+  temp_max_abs_error_c:
+    value: 3.0
+    unit: degC
+    basis: assumption
+    note: "Worst-point error; an MAE target alone can hide a badly predicted peak"
+  energy_error_pct:
+    value: 5
+    unit: "%"
+    basis: given
+    note: "|predicted - actual| / actual for kWh per batch (and therefore kWh/t)"
+  dispersion_time_error_pct:
+    value: 10
+    unit: "%"
+    basis: given
+    note: "Time from HSD start to target Hegman"
+  breach_lead_time_min:
+    value: 5
+    unit: min
+    basis: assumption
+    note: "'Several minutes ahead' taken as: warn at least 5 min before the limit is crossed"
+  max_false_alarms_per_100_batches:
+    value: 5
+    unit: alarms/100 batches
+    basis: assumption
+  min_fault_detection_rate_pct:
+    value: 80
+    unit: "%"
+    basis: assumption
+    note: "Per fault type (blade wear, fouled jacket, low flow, overcharge) - Step 8"
+  pass_rate_pct:
+    value: 90
+    unit: "%"
+    basis: assumption
+    note: "Share of TEST batches that must meet each target; always report median and P90, not only the mean"
+
+# --------------------------------------------------------------- SIMULATION --
+# Step 3. How the synthetic plant year is generated: calendar, climate, operator
+# habits, raw-material lots, sensor noise and injected faults. Everything the
+# twin will later have to cope with on real data is dialled in here.
+simulation:
+  n_batches:
+    value: 300
+    unit: batches
+    basis: given
+    note: "Minimum requested"
+  batches_generated:
+    value: 330
+    unit: batches
+    basis: assumption
+    note: "Generated: a little above the minimum so the test split still has >60 batches"
+  random_seed:
+    value: 42
+    unit: "-"
+    basis: assumption
+    note: "Fixed so every run reproduces the same dataset"
+  family_share_water_based:
+    value: 0.65
+    unit: "-"
+    basis: assumption
+    note: "Share of batches that are water-based; the rest solvent-based"
+  calendar:
+    start_date:
+      value: "2026-01-01"
+      unit: date
+      basis: assumption
+      note: "Synthetic calendar year so all seasons appear; not a plant date"
+    mean_days_between_batches:
+      value: 1.1
+      unit: days
+      basis: assumption
+      note: "One disperser, roughly one batch a day on this line (exponential spacing)"
+    start_hour_range:
+      value: [7, 21]
+      unit: h
+      basis: assumption
+  climate:                         # Chattogram-like: warm, humid, mild winter
+    ambient_mean_c:
+      value: 27
+      unit: degC
+      basis: assumption
+    ambient_amplitude_c:
+      value: 6
+      unit: degC
+      basis: assumption
+      note: "Annual sinusoid: 21 degC in January, 33 degC in July"
+    ambient_hottest_day_of_year:
+      value: 200
+      unit: day
+      basis: assumption
+    afternoon_bump_c:
+      value: 1.5
+      unit: degC
+      basis: assumption
+      note: "Batches started 12:00-18:00 see a hotter hall"
+    ambient_noise_sd_c:
+      value: 1.5
+      unit: degC
+      basis: assumption
+    cw_inlet_at_20c_ambient:
+      value: 12
+      unit: degC
+      basis: assumption
+      note: "Chiller delivers design 12 degC in cool weather"
+    cw_inlet_slope_per_k_ambient:
+      value: 1.2
+      unit: "-"
+      basis: assumption
+      note: "Chiller loses ground in hot weather: ~28 degC inlet at 33 degC ambient. Clipped to the given 12-28 range"
+    cw_inlet_noise_sd_c:
+      value: 1.0
+      unit: degC
+      basis: assumption
+    cw_inlet_cycling_amplitude_c:
+      value: 0.5
+      unit: degC
+      basis: assumption
+      note: "Chiller compressor cycling within a batch"
+    cw_inlet_cycling_period_min:
+      value: 20
+      unit: min
+      basis: assumption
+    raw_material_offset_c:
+      value: -1.0
+      unit: degC
+      basis: assumption
+      note: "Raw-material store is slightly cooler than the hall"
+    raw_material_noise_sd_c:
+      value: 0.8
+      unit: degC
+      basis: assumption
+  operator:
+    rpm_setpoint_sd_frac:
+      value: 0.04
+      unit: "-"
+      basis: assumption
+      note: "Operators set the HSD +/- 4 % around the recipe speed"
+    duration_sd_frac:
+      value: 0.15
+      unit: "-"
+      basis: assumption
+      note: "Charge, pigment and letdown durations vary +/- 15 % (log-normal)"
+    anchor_rpm_sd:
+      value: 3
+      unit: rpm
+      basis: assumption
+    cw_flow_choices_m3h:
+      value: [8, 10, 12]
+      unit: m3/h
+      basis: assumption
+      note: "Flow valve is set to one of these by habit"
+    cw_flow_choice_probabilities:
+      value: [0.3, 0.5, 0.2]
+      unit: "-"
+      basis: assumption
+    planned_dispersion_sd_frac:
+      value: 0.10
+      unit: "-"
+      basis: assumption
+      note: "Planned HSD time varies +/- 10 % around the recipe time"
+    dispersion_extension_min:
+      value: 10
+      unit: min
+      basis: assumption
+      note: "If the lab check at the planned end fails, run this much longer and re-check"
+    max_extensions:
+      value: 2
+      unit: "-"
+      basis: assumption
+      note: "After this many failed extensions the batch moves on (QC hold, outside the twin)"
+  lot_variation:
+    solids_sd_pct:
+      value: 1.0
+      unit: "% w/w"
+      basis: assumption
+      note: "Dosing and raw-material lot scatter in the batch solids"
+    mass_dosing_sd_frac:
+      value: 0.005
+      unit: "-"
+      basis: assumption
+      note: "Load-cell dosing scatter on total batch mass"
+    grind_energy_sd_frac:
+      value: 0.15
+      unit: "-"
+      basis: assumption
+      note: "Pigment lot grindability: multiplies the characteristic specific energy (log-normal)"
+    viscosity_sd_frac:
+      value: 0.12
+      unit: "-"
+      basis: assumption
+      note: "Raw-material lot: multiplies the vehicle viscosity (log-normal)"
+    hegman_plateau_sd:
+      value: 0.25
+      unit: Hegman
+      basis: assumption
+      note: "Lot-to-lot scatter in the best achievable grind"
+  sensors:
+    T_product_noise_sd_c:
+      value: 0.15
+      unit: degC
+      basis: assumption
+      note: "Pt100 in a thermowell, 10 s samples"
+    T_product_offset_sd_c:
+      value: 0.2
+      unit: degC
+      basis: assumption
+      note: "Per-batch calibration / immersion offset"
+    T_jacket_noise_sd_c:
+      value: 0.10
+      unit: degC
+      basis: assumption
+    flow_noise_frac:
+      value: 0.02
+      unit: "-"
+      basis: assumption
+      note: "Electromagnetic flow meter"
+    kw_noise_frac:
+      value: 0.015
+      unit: "-"
+      basis: assumption
+      note: "VFD power estimate"
+    kw_resolution_kw:
+      value: 0.1
+      unit: kW
+      basis: assumption
+    rpm_noise_sd:
+      value: 2
+      unit: rpm
+      basis: assumption
+    mass_noise_sd_kg:
+      value: 3
+      unit: kg
+      basis: assumption
+      note: "Load cells under a running agitator"
+    mass_resolution_kg:
+      value: 1
+      unit: kg
+      basis: assumption
+    hegman_lab_noise_sd:
+      value: 0.25
+      unit: Hegman
+      basis: assumption
+      note: "Grind-gauge reading scatter before rounding to the nearest 0.5"
+    viscosity_lab_noise_sd_ku:
+      value: 3
+      unit: KU
+      basis: assumption
+  plant_mismatch:                 # hidden offsets between the SIMULATED PLANT and the twin's physics
+    # The simulator runs the Step 2 equations with these parameters nudged, so the
+    # twin's physics is systematically a little wrong - as it will be against the real
+    # plant. The ML residual model (Step 5) and the recalibration plan (Step 9) have
+    # to earn their keep. The twin never sees these numbers.
+    np_turbulent_factor:
+      value: 1.08
+      unit: "-"
+      basis: assumption
+      note: "Plant blade draws 8 % more power than the twin's power number says"
+    h_product_factor:
+      value: 0.88
+      unit: "-"
+      basis: assumption
+      note: "Plant-side heat transfer 12 % worse than the twin assumes"
+    evaporative_loss_factor:
+      value: 1.6
+      unit: "-"
+      basis: assumption
+      note: "Real evaporation through the vent is larger than the linearised guess"
+    char_specific_energy_factor:
+      value: 0.92
+      unit: "-"
+      basis: assumption
+      note: "Plant pigments grind a little faster than the twin's curve"
+    phi_max_delta:
+      value: -0.02
+      unit: "-"
+      basis: assumption
+      note: "Plant millbase packs slightly less -> higher viscosity than modelled"
+  faults:
+    blade_life_batches:
+      value: 150
+      unit: batches
+      basis: assumption
+      note: "Blade replaced after this many batches; wear grows linearly in between"
+    blade_wear_at_end_of_life:
+      value: 0.25
+      unit: "-"
+      basis: assumption
+      note: "Grind effectiveness lost by replacement time"
+    blade_wear_label_threshold:
+      value: 0.18
+      unit: "-"
+      basis: assumption
+      note: "Batches at or above this wear are labelled BLADE_WEAR in the ground truth"
+    fouling_cleaning_interval_batches:
+      value: 110
+      unit: batches
+      basis: assumption
+      note: "Jacket chemically cleaned at this interval; scale builds linearly in between"
+    fouling_at_cleaning_m2k_w:
+      value: 0.0006
+      unit: m2.K/W
+      basis: assumption
+      note: "Scale resistance reached just before cleaning (~20 % loss of U)"
+    fouling_episode_probability:
+      value: 0.02
+      unit: "-"
+      basis: assumption
+      note: "Per batch: chance that a dirty-water episode starts (sudden extra fouling)"
+    fouling_episode_extra_m2k_w:
+      value: 0.0012
+      unit: m2.K/W
+      basis: assumption
+    fouling_episode_length_batches:
+      value: [8, 20]
+      unit: batches
+      basis: assumption
+    fouling_label_threshold_m2k_w:
+      value: 0.0005
+      unit: m2.K/W
+      basis: assumption
+    low_flow_probability:
+      value: 0.06
+      unit: "-"
+      basis: assumption
+      note: "Per batch: strainer / valve problem leaves the jacket flow well below the set-point"
+    low_flow_fraction_range:
+      value: [0.40, 0.65]
+      unit: "-"
+      basis: assumption
+    overcharge_probability:
+      value: 0.04
+      unit: "-"
+      basis: assumption
+      note: "Per batch: dosing error puts far more material in than the recipe says"
+    overcharge_fraction_range:
+      value: [1.07, 1.15]
+      unit: "-"
+      basis: assumption
+
+# ------------------------------------------------------------------ PHYSICS --
+# Step 2. Every coefficient of the first-principles model. Rows marked
+# "assumption" are what the first real batches must recalibrate (Step 9), in
+# roughly this order: np_turbulent, h_product_ref, evaporative_loss, grind.
+physics:
+  hsd_power:                       # P_shaft = Np * rho * N^3 * D^5 ; Np = Kp/Re + Np_turb
+    np_turbulent:
+      value: 0.30
+      unit: "-"
+      basis: assumption
+      note: "Sawtooth (Cowles) disc, fully turbulent; literature 0.2-0.5. First number to fit from kW-vs-rpm on real batches"
+    laminar_constant_kp:
+      value: 60
+      unit: "-"
+      basis: assumption
+      note: "Np = Kp/Re + Np_turb; Kp 50-100 for disc-type impellers"
+    no_load_kw:
+      value: 1.0
+      unit: kW
+      basis: assumption
+      note: "Motor + drive + bearings + fan at speed with the blade in air"
+    blade_height_above_bottom_m:
+      value: 0.30
+      unit: m
+      basis: assumption
+      note: "Nominal blade position for a full batch; below this liquid depth the blade runs in air (no hydraulic load)"
+    blade_height_min_m:
+      value: 0.15
+      unit: m
+      basis: assumption
+      note: "Lowest position of the hydraulic shaft lift; operators lower the blade for small batches"
+    blade_height_fraction_of_millbase:
+      value: 0.45
+      unit: "-"
+      basis: assumption
+      note: "Operators set the blade at this fraction of the expected millbase depth (clipped between min and nominal)"
+    submergence_ramp_m:
+      value: 0.15
+      unit: m
+      basis: assumption
+      note: "Liquid cover above the blade needed for full hydraulic load"
+    blade_wear_power_factor:
+      value: 0.4
+      unit: "-"
+      basis: assumption
+      note: "A fully rounded (100 % worn) blade draws 40 % less power; its grind effectiveness falls 1:1 with wear"
+  anchor_power:
+    sweep_diameter_m:
+      value: 1.50
+      unit: m
+      basis: assumption
+      note: "Anchor sweep ~0.94 x vessel inner diameter"
+    np_turbulent:
+      value: 0.35
+      unit: "-"
+      basis: assumption
+    laminar_constant_kp:
+      value: 300
+      unit: "-"
+      basis: assumption
+      note: "Anchors / close-clearance impellers: 200-400"
+    no_load_kw:
+      value: 0.3
+      unit: kW
+      basis: assumption
+    min_effective_rpm:
+      value: 8
+      unit: rpm
+      basis: assumption
+      note: "Floor used in the product-side heat-transfer correlation: the HSD keeps some wall flow even with the anchor stopped"
+  materials:
+    water_based:
+      pigment_density_kg_l:
+        value: 2.9
+        unit: kg/L
+        basis: assumption
+        note: "TiO2 (4.2) blended with CaCO3 / talc (2.7)"
+      binder_density_kg_l:
+        value: 1.1
+        unit: kg/L
+        basis: assumption
+        note: "Acrylic / styrene-acrylic polymer solids"
+      liquid_density_kg_l:
+        value: 1.0
+        unit: kg/L
+        basis: physical
+        note: "Water"
+      cp_liquid_kj_kgk:
+        value: 4.18
+        unit: kJ/(kg.K)
+        basis: physical
+      cp_binder_solid_kj_kgk:
+        value: 1.7
+        unit: kJ/(kg.K)
+        basis: assumption
+      cp_pigment_kj_kgk:
+        value: 0.75
+        unit: kJ/(kg.K)
+        basis: assumption
+        note: "TiO2 0.70, CaCO3 0.85"
+      charge_fraction:
+        value: 0.24
+        unit: "-"
+        basis: assumption
+        note: "Share of batch mass charged as liquids before pigments (water + dispersant + additives); the rest of the water comes with the letdown"
+    solvent_based:
+      pigment_density_kg_l:
+        value: 3.9
+        unit: kg/L
+        basis: assumption
+        note: "TiO2-dominated gloss enamel"
+      binder_density_kg_l:
+        value: 1.05
+        unit: kg/L
+        basis: assumption
+        note: "Alkyd resin solids"
+      liquid_density_kg_l:
+        value: 0.85
+        unit: kg/L
+        basis: assumption
+        note: "Mineral spirit / xylene blend"
+      cp_liquid_kj_kgk:
+        value: 1.9
+        unit: kJ/(kg.K)
+        basis: assumption
+        note: "Mineral spirit 1.9, xylene 1.7"
+      cp_binder_solid_kj_kgk:
+        value: 1.7
+        unit: kJ/(kg.K)
+        basis: assumption
+      cp_pigment_kj_kgk:
+        value: 0.75
+        unit: kJ/(kg.K)
+        basis: assumption
+      charge_fraction:
+        value: 0.28
+        unit: "-"
+        basis: assumption
+        note: "Alkyd solution + solvent charged before pigments"
+  viscosity:                       # mu = mu_ref * exp(-b (T - T_ref)) * (1 - phi_eff/phi_max)^(-n)
+    reference_temp_c:
+      value: 25
+      unit: degC
+      basis: assumption
+      note: "All mu_ref values are quoted at this temperature"
+    phi_max:
+      value: 0.64
+      unit: "-"
+      basis: assumption
+      note: "Krieger-Dougherty maximum packing for a polydisperse pigment/extender blend"
+    kd_exponent:
+      value: 1.6
+      unit: "-"
+      basis: assumption
+      note: "[eta] x phi_max = 2.5 x 0.64"
+    agglomerate_factor:
+      value: 0.20
+      unit: "-"
+      basis: assumption
+      note: "Unwetted agglomerates immobilise 20 % extra liquid -> higher effective solids until wetted"
+    phi_eff_cap:
+      value: 0.95
+      unit: "-"
+      basis: assumption
+      note: "Numerical cap on phi_eff / phi_max (Krieger-Dougherty goes to infinity at phi_max)"
+    wetting_energy_kwh_t:
+      value: 1.5
+      unit: kWh/t
+      basis: assumption
+      note: "Shaft kWh per tonne of millbase to wet 63 % of the pigment (first-order)"
+    water_based:
+      vehicle_mu_ref_pa_s:
+        value: 0.15
+        unit: Pa.s
+        basis: assumption
+        note: "Apparent viscosity of the millbase liquid phase at blade shear rate, 25 degC"
+      temp_coeff_per_k:
+        value: 0.020
+        unit: 1/K
+        basis: assumption
+        note: "Viscosity falls ~2 % per K"
+    solvent_based:
+      vehicle_mu_ref_pa_s:
+        value: 0.60
+        unit: Pa.s
+        basis: assumption
+        note: "Alkyd solution 60-70 % NV at blade shear rate, 25 degC"
+      temp_coeff_per_k:
+        value: 0.030
+        unit: 1/K
+        basis: assumption
+        note: "Viscosity falls ~3 % per K"
+  heat_transfer:                   # 1/U = 1/h_product + wall/k + 1/h_jacket + R_fouling
+    dissipation_fraction:
+      value: 0.98
+      unit: "-"
+      basis: assumption
+      note: "Share of shaft power that ends up as heat in the product (rest: seal/bearing heat, entrained air)"
+    h_jacket_ref_w_m2k:
+      value: 2500
+      unit: W/(m2.K)
+      basis: assumption
+      note: "Chilled water in a half-pipe or dimple jacket, turbulent, at the reference flow"
+    jacket_ref_flow_m3h:
+      value: 10
+      unit: m3/h
+      basis: assumption
+    jacket_flow_exponent:
+      value: 0.8
+      unit: "-"
+      basis: physical
+      note: "Dittus-Boelter: h ~ velocity^0.8"
+    wall_conductivity_w_mk:
+      value: 16
+      unit: W/(m.K)
+      basis: physical
+      note: "SS 316L"
+    h_product_ref_w_m2k:
+      value: 350
+      unit: W/(m2.K)
+      basis: assumption
+      note: "Viscous millbase on an anchor-scraped wall at reference anchor speed and viscosity, clean; 200-600 in literature. Second number to fit from real batches"
+    product_ref_anchor_rpm:
+      value: 30
+      unit: rpm
+      basis: assumption
+    product_ref_mu_pa_s:
+      value: 1.0
+      unit: Pa.s
+      basis: assumption
+    product_anchor_exponent:
+      value: 0.667
+      unit: "-"
+      basis: physical
+      note: "Nu ~ Re^(2/3) for anchors / close-clearance impellers"
+    product_mu_exponent:
+      value: -0.333
+      unit: "-"
+      basis: assumption
+      note: "Net viscosity effect after Re^(2/3) Pr^(1/3)"
+  losses:
+    u_loss_w_m2k:
+      value: 8
+      unit: W/(m2.K)
+      basis: assumption
+      note: "Natural convection + radiation from the exposed stainless shell and lid"
+    a_loss_m2:
+      value: 5
+      unit: m2
+      basis: assumption
+      note: "Unjacketed upper shell + lid"
+    evaporative_loss_w_per_k:
+      water_based:
+        value: 50
+        unit: W/K
+        basis: assumption
+        note: "Linearised evaporation through lid / dust-extraction vent per K above ambient. LEAST certain term - calibrate early"
+      solvent_based:
+        value: 80
+        unit: W/K
+        basis: assumption
+        note: "Higher vapour pressure, lower latent heat than water"
+  grind:                           # dH/dt = (H_plateau - H) * w * f(v) * (1 - wear) * e_dot / e_c
+    hegman_initial:
+      value: 2.0
+      unit: Hegman
+      basis: assumption
+      note: "Grind right after low-speed pigment addition"
+    hegman_plateau:
+      water_based:
+        value: 7.0
+        unit: Hegman
+        basis: assumption
+        note: "Best the HSD can reach for this family; a recipe may set its own plateau"
+      solvent_based:
+        value: 7.75
+        unit: Hegman
+        basis: assumption
+    char_specific_energy_kwh_t:
+      water_based:
+        value: 6.0
+        unit: kWh/t
+        basis: assumption
+        note: "Effective shaft kWh per tonne of millbase for 63 % of the way to the plateau; extender-heavy matt grinds slowly"
+      solvent_based:
+        value: 5.0
+        unit: kWh/t
+        basis: assumption
+        note: "TiO2-only gloss millbase disperses more easily"
+    tip_speed_min_ms:
+      value: 10
+      unit: m/s
+      basis: assumption
+      note: "No grind progress below this tip speed"
+    tip_speed_ref_ms:
+      value: 20
+      unit: m/s
+      basis: assumption
+      note: "Effectiveness = 1 here; 25 m/s -> 1.5, 18 m/s -> 0.8"
+    effectiveness_exponent:
+      value: 1.0
+      unit: "-"
+      basis: assumption
+
+# ------------------------------------------------------------------- ALERTS --
+# Step 7 first version; Step 8 tunes every threshold against the injected faults and
+# reports detection and false-alarm rates. All are twin-side rules on MEASURED tags
+# and physics residuals - none uses the simulator's hidden truth.
+alerts:
+  horizon_min:
+    value: 5
+    unit: min
+    basis: assumption
+    note: "Look-ahead of the 'ahead' model; same as kpi_targets.breach_lead_time_min"
+  projection_max_min:
+    value: 30
+    unit: min
+    basis: assumption
+    note: "How far the residual-persistence projection looks for a limit crossing"
+  residual_persistence_decay_min:
+    value: 20
+    unit: min
+    basis: assumption
+    note: "The current residual (measured - forecast) is assumed to fade with this time constant in the projection"
+  temp_prealarm_ahead:
+    value: true
+    unit: "-"
+    basis: assumption
+    note: "Raise TEMP_PREALARM when the 5-min-ahead temperature exceeds limit - margin"
+  kw_resid_window_min:
+    value: 5
+    unit: min
+    basis: assumption
+    note: "Rolling window for the HSD power residual used by the blade-wear rule"
+  blade_wear_kw_resid_pct:
+    value: -2.5
+    unit: "%"
+    basis: assumption
+    note: "Tuned Step 8 on simulated data: detection 100 %, false 0.0/100 clearly healthy. HSD power below its NORMAL gap to physics by more than this -> BLADE_WEAR"
+  blade_wear_min_dispersion_min:
+    value: 5
+    unit: min
+    basis: assumption
+    note: "Rule only active after this many minutes of high-speed dispersion (power settled)"
+  fouling_T_resid_replay_c:
+    value: 0.35
+    unit: degC
+    basis: assumption
+    note: "Tuned Step 8: T-rule alone detection 66 %, false 4.3/100. Product above its NORMAL gap to the measured-power physics by more than this"
+  fouling_min_dispersion_min:
+    value: 10
+    unit: min
+    basis: assumption
+  fouling_u_drop_pct:
+    value: 4.5
+    unit: "%"
+    basis: assumption
+    note: "Tuned Step 8: U-rule alone detection 88 %, false 2.9/100. Implied U below its NORMAL level by more than this"
+  fouling_rule_mode:
+    value: "u"
+    unit: "-"
+    basis: assumption
+    note: "Chosen by the Step 8 tuner: variant 'u' gives detection 88 %, false 2.9/100 (u = implied U only, T = temperature residual only, u_or_T, u_and_T)"
+  fouling_min_product_jacket_dt_c:
+    value: 5.0
+    unit: degC
+    basis: assumption
+    note: "The implied U is only trusted when the product is at least this far above the chilled-water inlet (duty large vs sensor noise)"
+  u_window_min:
+    value: 5
+    unit: min
+    basis: assumption
+    note: "Rolling window for the implied-U indicator (jacket dT noise ~0.1 degC per sample needs averaging)"
+  drift_window_batches:
+    value: 30
+    unit: batches
+    basis: assumption
+    note: "Cross-batch drift tracker: linear trend of the per-batch indicators over this many batches"
+  drift_cusum_slack:
+    value: 0.5
+    unit: "indicator units"
+    basis: assumption
+    note: "CUSUM allowance: drift below this per batch is ignored (% for power, % for U)"
+  drift_cusum_h:
+    value: 15.0
+    unit: "indicator units"
+    basis: assumption
+    note: "CUSUM decision interval: cumulative drift beyond this raises the slow-trend alert"
+  low_flow_ratio:
+    value: 0.76
+    unit: "-"
+    basis: assumption
+    note: "Tuned Step 8: detection 100 %, false 0.0/100. Measured flow / set-point below this -> LOW_CW_FLOW"
+  overcharge_ratio:
+    value: 1.035
+    unit: "-"
+    basis: assumption
+    note: "Tuned Step 8 (floor 1.03 kept above dosing scatter): detection 100 %, false 0.0/100. Load-cell mass / nominal above this -> OVERCHARGE"
+  high_cw_inlet_c:
+    value: 25
+    unit: degC
+    basis: assumption
+    note: "Chilled-water inlet above this is flagged as a utility cause of high product temperature"
+  alert_hold_rows:
+    value: 6
+    unit: samples
+    basis: assumption
+    note: "A rule must hold for this many consecutive 10 s samples (1 min) before an alert is raised - debounce"

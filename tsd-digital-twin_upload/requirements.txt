@@ -1,0 +1,14 @@
+# Python packages for the TSD digital twin prototype.
+# Install once from the project folder:   pip install -r requirements.txt
+#
+# Step 1 needs only the first three. The rest are listed now so one install
+# covers all nine steps.
+pyyaml>=6.0          # Step 1  - reads config/assumptions.yaml
+numpy>=1.24          # Step 1+ - numerics
+pandas>=2.0          # Step 1+ - tables / time series
+scipy>=1.10          # Step 2  - ODE integration of the energy balance
+scikit-learn>=1.3    # Step 5  - gradient boosting (HistGradientBoosting, no compiler needed)
+streamlit>=1.30      # Step 7  - dashboard
+plotly>=5.18         # Step 7  - charts
+asyncua>=1.1         # Step 9  - OPC UA client (live source) and the mock PLC server
+paho-mqtt>=2.0       # Step 9  - MQTT client (live source)

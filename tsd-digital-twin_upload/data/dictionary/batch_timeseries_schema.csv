@@ -1,0 +1,30 @@
+column,unit,source,sampling,description,group
+batch_id,-,MES,per batch,Unique batch identifier (MES batch number),measured
+timestamp,ISO-8601,historian,10 s,"Absolute time stamp, local plant time",measured
+t_s,s,derived,10 s,Seconds since batch start (first row of charge_liquids),measured
+step,-,MES / PLC phase,10 s,charge_liquids | pigment_addition | high_speed_dispersion | letdown,measured
+product_family,-,MES recipe,per batch,water_based | solvent_based,measured
+recipe_id,-,MES recipe,per batch,Recipe / product code,measured
+batch_mass_kg,kg,PLC load cells,10 s,Mass in the vessel (rises during charging),measured
+solids_pct,% w/w,MES recipe,per batch,Recipe solids content,measured
+pvc_pct,%,MES recipe,per batch,Pigment volume concentration,measured
+target_hegman,Hegman,MES recipe,per batch,Grind target for the millbase,measured
+hsd_rpm,rpm,PLC / VFD,10 s,High-speed disperser shaft speed,measured
+anchor_rpm,rpm,PLC / VFD,10 s,Anchor / scraper shaft speed,measured
+hsd_kw,kW,PLC / VFD,10 s,HSD motor electrical power,measured
+anchor_kw,kW,PLC / VFD,10 s,Anchor motor electrical power,measured
+T_product_c,degC,PLC (vessel RTD),10 s,Product temperature,measured
+T_jacket_in_c,degC,PLC,10 s,Chilled-water inlet temperature,measured
+T_jacket_out_c,degC,PLC,10 s,Chilled-water outlet temperature,measured
+cw_flow_m3h,m3/h,PLC,10 s,Chilled-water flow to the jacket,measured
+T_ambient_c,degC,PLC or weather,10 s,Hall air temperature (assumed available; daily value if not),measured
+hegman,Hegman,LAB,sparse,Grind-gauge reading; NaN when not sampled,measured
+viscosity_ku,KU,LAB,sparse,Stormer viscosity; NaN when not sampled,measured
+T_pred_c,degC,twin,10 s,Predicted product temperature,twin_output
+hsd_kw_pred,kW,twin,10 s,Predicted HSD power,twin_output
+energy_cum_kwh,kWh,derived,10 s,"Cumulative energy, HSD + anchor",twin_output
+specific_energy_cum_kwh_t,kWh/t,derived,10 s,Cumulative specific energy,twin_output
+hegman_pred,Hegman,twin,10 s,Predicted grind development,twin_output
+breach_eta_min,min,twin,10 s,Predicted minutes until the temperature limit (NaN = none),twin_output
+alert_code,-,twin,10 s,NONE | TEMP_PREALARM | TEMP_LIMIT | BLADE_WEAR | JACKET_FOULING | LOW_CW_FLOW | OVERCHARGE | MOTOR_OVERLOAD,twin_output
+fault_injected,-,simulator only,per batch,Ground-truth fault label in SIMULATED data; never available live,twin_output
